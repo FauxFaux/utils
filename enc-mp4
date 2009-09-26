@@ -104,14 +104,14 @@ sub process_file {
                 "-i", $Filename,    # Input filename
                 "-f", "mp4",        # Format
                 "-vcodec", "mpeg4", # Video codec
-                "-b", "250000",     # Video bitrate
-                "-r", $Fps,         # Frames per second
-                "-s", "320x240",    # Frame size
+                # "-b", "250000",     # Video bitrate
+                # "-r", $Fps,         # Frames per second
+                # "-s", "320x240",    # Frame size
                 "-acodec", "aac",   # Audio codec
-                "-ar", "44100",     # Audio sampling frequency
-                "-ab", "64",        # Audio bitrate in kbit/s
-                "-ac", "2",         # Number of audio channels
-                "-me", "epzs",      # Motion estimation method (best quality)
+                # "-ar", "44100",     # Audio sampling frequency
+                # "-ab", "64",        # Audio bitrate in kbit/s
+                # "-ac", "2",         # Number of audio channels
+                "-me_method", "epzs",      # Motion estimation method (best quality)
                 "-y",               # Overwrite output files
                 $output_file        # Output filename
             );

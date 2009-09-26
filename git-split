@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#=======================================================================
+# git-split
+# File ID: b27052e4-a5f2-11de-954d-00248cd5cf1e
+# Split current git commit
+# License: GNU General Public License version 3 or later.
+#=======================================================================
+
+[ -z "$1" ] && { echo Syntax: $0 tempbranch; exit 1; }
+tmpbr=$1
+currbranch=`git rev-parse --abbrev-ref HEAD`
+echo currbranch = \'$currbranch\'
+[ "$currbranch" = "HEAD" ] && { echo "Seems as we're not on a local branch, aborting"; exit 1; }
+echo -n Warning, this script is highly experimental. Press Enter to continue...
+read
+
+git branch $tmpbr || { echo $0: $tmpbr: Could not create branch; exit 1; }
+git reset --hard HEAD^
+
+until [ -z "`git diff $currbranch $tmpbr`" ]; do
+    git co -f $currbranch
+    git clean -fxd
+    git merge $tmpbr --squash --no-commit
+    git reset
+    git difftool
+    git ci -av
+    git co $tmpbr
+    git rebase $currbranch
+done

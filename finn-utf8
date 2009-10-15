@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#=======================================================================
+# finn-utf8
+# File ID: d799b70e-b961-11de-9b54-00248cd5cf1e
+# [Description]
+# License: GNU General Public License version 3 or later.
+#=======================================================================
+
+topdir=/home/sunny/src/git/wrk-utils
+
+# What the finn-utf8 script shall return, switch the values if the test 
+# returns 0 for error and !0 for success.
+good=0
+bad=1
+
+function cleangit {
+    cd $topdir || { echo "finn-utf8: $topdir: Cannot change directory, aborting." >&2; exit 150; }
+    if [ ! -d .git/. ]; then
+        echo "finn-utf8: $topdir: Doesn’t contain a .git directory, aborting." >&2
+        exit 150
+    fi
+    git clean -fxd
+    git co -f
+}
+
+function inittest {
+    : Things like ./configure and make goes here
+}
+
+function runtest {
+    grep -rh . * | find_8bit | fmt -1 | grep -q . || return 0
+    grep -rh . * | fmt -1 | find_inv_utf8 -s | grep -q . && return 1
+    return 0
+}
+
+cleangit
+cd $topdir
+inittest
+runtest || { cleangit; echo finn-utf8: bad, returns $bad; exit $bad; }
+cleangit
+echo finn-utf8: good, returns $good
+exit $good

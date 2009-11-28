@@ -9,10 +9,11 @@
 use strict;
 
 while(<>) {
-	chomp;
-	if (/(http\S+?)"/i) {
-		my $Curr = $1;
-		$Curr =~ s/&amp;/&/g;
-		print("$1\n");
-	}
+	s/(http\S+?)"/print_url($1)/gies;
+}
+
+sub print_url {
+    my $Url = shift;
+    $Url =~ s/&amp;/&/g;
+    print("$Url\n");
 }

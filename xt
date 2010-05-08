@@ -1,15 +1,31 @@
-#!/bin/sh
+#!/bin/sh -v
 
 # xt
 # File ID: 0c214154-5d4a-11df-940b-90e6ba3022ac
 
+opt_g=1
+
+while getopts  "g:" flag
+do
+    case "$flag" in
+        g)
+            export opt_g=$OPTARG
+            ;;
+        \?)
+            exit 1
+            ;;
+    esac
+done
+
+echo opt_g = \"$opt_g\"
+
 for f in "$@"; do
     if echo $f | grep -qi '\.gpx$'; then
-        gpx_xsd=~/bin/Git/gpstools/Tools/xsd/gpx/gpx-1.1.xsd
+        gpx_xsd=~/bin/Git/gpstools/Tools/xsd/gpx/gpx-1.$opt_g.xsd
         if [ -e $gpx_xsd ]; then
             xmllint --noout --schema $gpx_xsd $f
         else
-            xmllint --noout --schema http://www.topografix.com/GPX/1/1/gpx.xsd $f
+            xmllint --noout --schema http://www.topografix.com/GPX/1/$opt_g/gpx.xsd $f
         fi
     else
         xmllint --valid --noout "$f"

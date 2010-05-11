@@ -22,6 +22,7 @@ our %Opt = (
 
     'debug' => 0,
     'filenames' => 0,
+    'grep' => 0,
     'help' => 0,
     'line' => 0,
     'verbose' => 0,
@@ -38,6 +39,7 @@ GetOptions(
 
     "debug" => \$Opt{'debug'},
     "filenames|f" => \$Opt{'filenames'},
+    "grep|g" => \$Opt{'grep'},
     "help|h" => \$Opt{'help'},
     "line|l" => \$Opt{'line'},
     "verbose|v+" => \$Opt{'verbose'},
@@ -57,11 +59,16 @@ my $Templ = "$Lh\{8}-$Lh\{4}-$Lh\{4}-$Lh\{4}-$Lh\{12}";
 
 while (<>) {
     chomp(my $Line = $_);
-    if (/($Templ)/) {
-        if ($Opt{'line'}) {
-            printf("%s%s\n", ($Opt{'filenames'} ? "$ARGV:" : ""), $Line);
-        } else {
-            $Line =~ s/($Templ)/printf("%s%s\n", ($Opt{'filenames'} ? "$ARGV:" : ""), $1)/ge;
+    if ($Opt{'grep'}) {
+        s/($Templ)/`grep -h ' u="$1"' ~\/uuids\/0* | grep '<suuid ' | head -1 | xf | grep -v '<?xml version=' | perl -e 'my \$a = join("", <STDIN>); \$a =~ s\/\n\$\/\/s; print \$a;'`/ge;
+        print;
+    } else {
+        if (/($Templ)/) {
+            if ($Opt{'line'}) {
+                printf("%s%s\n", ($Opt{'filenames'} ? "$ARGV:" : ""), $Line);
+            } else {
+                $Line =~ s/($Templ)/printf("%s%s\n", ($Opt{'filenames'} ? "$ARGV:" : ""), $1)/ge;
+            }
         }
     }
 }

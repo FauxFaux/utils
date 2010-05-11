@@ -36,6 +36,7 @@ our %Opt = (
     'files-from' => "",
     'help' => 0,
     'short-format' => 0,
+    'tab' => 1,
     'verbose' => 0,
     'version' => 0,
     'xml' => 0,
@@ -58,6 +59,7 @@ GetOptions(
     "files-from|f=s" => \$Opt{'files-from'},
     "help|h" => \$Opt{'help'},
     "short-format|s" => \$Opt{'short-format'},
+    "tab|t" => \$Opt{'tab'},
     "verbose|v+" => \$Opt{'verbose'},
     "version" => \$Opt{'version'},
     "xml|x" => \$Opt{'xml'},
@@ -247,6 +249,11 @@ sub add_entry {
                     );
                     # }}}
                 }
+            } elsif ($Opt{'tab'}) {
+                $Retval = sprintf(
+                    "%s-%s-%lu\t%s\n",
+                    $Sum{'sha1'}, $Sum{'md5'}, $Size, safe_tab($Filename)
+                );
             } else {
                 my $descr_str = length($Opt{'description'})
                     ? "E'" . safe_sql($Opt{'description'}) . "'"
@@ -378,6 +385,9 @@ Options:
     Show this help.
   -s, --short-format
     Output checksums, size, filname, mtime and latin1 fields only.
+  -t, --tab
+    Use tab (in lack of better name) format: SHA1-MD5-SIZE\\tFILENAME\\n
+    This option is experimental and likely to change.
   -v, --verbose
     Increase level of verbosity. Can be repeated.
   --version

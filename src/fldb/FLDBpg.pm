@@ -23,7 +23,7 @@ BEGIN {
     $VERSION = ($rcs_id =~ / (\d+) /, $1);
 
     @ISA = qw(Exporter);
-    @EXPORT = qw(&safe_sql);
+    @EXPORT = qw(&safe_sql &safe_tab);
     %EXPORT_TAGS = ();
 }
 our @EXPORT_OK;
@@ -39,5 +39,16 @@ sub safe_sql {
     return($Text);
     # }}}
 } # safe_sql()
+
+sub safe_tab {
+    # {{{
+    my $Str = shift;
+    $Str =~ s/\\/\\\\/gs;
+    $Str =~ s/\n/\\n/gs;
+    $Str =~ s/\r/\\r/gs;
+    $Str =~ s/\t/\\t/gs;
+    return($Str);
+    # }}}
+} # safe_tab()
 
 1;

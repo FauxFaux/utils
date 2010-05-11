@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 #define  MAXSTR 512
 #define  INTEL
 #define  min(x,y) (x < y ? x : y)
@@ -109,7 +109,7 @@ char *s;
 
 /* ------------------------------------------------------------------------- */
 
-fatal_err( msg)
+void fatal_err( msg)
 char *msg;
 {
 	fprintf(stderr,"\ndbf2tab: %s\n", msg);

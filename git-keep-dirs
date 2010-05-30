@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# git-keep-dirs
+# File ID: 2eaea83a-6bda-11df-beb7-90e6ba3022ac
+# Until Git learns how to version control empty directories, add an empty 
+# placeholder file in every empty directory. Horrible hack and annoying as 
+# hell, but it works for now. Kind of.
+
+find -type d -empty -exec touch {}/.keepdir \;
+find -type f -name .keepdir -regex '.*/.git/.*' -exec rm {} \;
+find -type f -name .keepdir -exec git add {} \;

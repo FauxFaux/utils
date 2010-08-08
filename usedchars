@@ -7,15 +7,15 @@
 
 use strict;
 
-my $Char;
+my $String;
 my %Hash; # Gjerne det
 
 defined($ARGV[0]) || die("Syntax: $0 file [...]\n");
 
 foreach (@ARGV) {
 	if (open(FP, "<$_")) {
-		while (sysread(FP, $Char, 1)) {
-			$Hash{$Char}++;
+		while (sysread(FP, $String, 8192)) {
+			$String =~ s/(.)/$Hash{$1}++/gse;
 		}
 	} else {
 		warn("$_: Unable to open file for read: $!");

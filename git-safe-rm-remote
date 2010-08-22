@@ -11,11 +11,14 @@ progname=git-safe-rm-remote
 tmpgit=tmpgit.$$.$RANDOM.tmp
 git remote | grep -q "^$1\$" || { echo $progname: \"$1\" remote not found >&2; exit 0; }
 cp -a .git $tmpgit || { echo $progname: .git: Error during copy >&2; exit 1; }
-before=$(git log --all | wc -l)
+git log --all --abbrev-commit --format=oneline >bef.$tmpgit
+before=$(wc -l <bef.$tmpgit)
 git remote rm $1
-after=$(git log --all | wc -l)
+git log --all --abbrev-commit --format=oneline >aft.$tmpgit
+after=$(wc -l <aft.$tmpgit)
 echo $progname: before = $before, after = $after
-test "$before" = "$after" && { echo $progname: $1 remote safely removed; rm -rf $tmpgit; exit 0; }
+test "$before" = "$after" && { echo $progname: $1 remote safely removed; rm -rf $tmpgit aft.$tmpgit bef.$tmpgit; exit 0; }
 echo $progname: Cannot remove remote \"$1\" without losing commits, restoring .git/ >&2
+diff -u bef.$tmpgit aft.$tmpgit | grep ^-
 rm -rf .git || { echo $progname: Cannot remove .git/, please restore it manually by replacing it with $tmpgit >&2; exit 1; }
 mv $tmpgit .git

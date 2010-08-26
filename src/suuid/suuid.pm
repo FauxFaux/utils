@@ -19,10 +19,18 @@ BEGIN {
     our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
     @ISA = qw(Exporter);
-    @EXPORT = qw(&uuid_time &suuid_xml);
+    @EXPORT = qw(&uuid_time &suuid_xml $Templ);
+    @EXPORT_OK = qw($Templ);
     %EXPORT_TAGS = ();
 }
 our @EXPORT_OK;
+
+our ($Lh, $Templ, $v1_templ, $v1rand_templ);
+
+$Lh = "[0-9a-fA-F]";
+$Templ = "$Lh\{8}-$Lh\{4}-$Lh\{4}-$Lh\{4}-$Lh\{12}";
+$v1_templ = "$Lh\{8}-$Lh\{4}-1$Lh\{3}-$Lh\{4}-$Lh\{12}";
+$v1rand_templ = "$Lh\{8}-$Lh\{4}-1$Lh\{3}-$Lh\{4}-$Lh\[37bf]$Lh\{10}";
 
 sub uuid_time {
     # {{{

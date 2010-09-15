@@ -13,13 +13,14 @@
 use strict;
 use warnings;
 use bigint;
+use Time::HiRes;
 
 BEGIN {
     use Exporter ();
     our ($VERSION, @ISA, @EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
     @ISA = qw(Exporter);
-    @EXPORT = qw(&uuid_time &suuid_xml &bighex);
+    @EXPORT = qw(&uuid_time &suuid_xml &bighex &time2hex);
     %EXPORT_TAGS = ();
 }
 our @EXPORT_OK;
@@ -89,6 +90,17 @@ sub uuid_hex_date {
     return($Retval);
     # }}}
 } # uuid_hex_date()
+
+sub time2hex {
+    # {{{
+    my $Time = shift;
+    print("Time init = '$Time'\n");
+    $Time *= 10_000_000.0;
+    my $uuid_date = (12_219_292_800 + $Time);
+    print("Time = '$Time', uuid_date = '$uuid_date'\n");
+    my $Retval = sprintf("%x", $uuid_date);
+    # }}}
+} # time2hex()
 
 sub suuid_xml {
     # {{{

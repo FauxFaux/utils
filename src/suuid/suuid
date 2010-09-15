@@ -14,6 +14,7 @@
 use strict;
 use Fcntl ':flock';
 use Getopt::Long;
+use Time::HiRes qw( gettimeofday );
 use lib "$ENV{HOME}/bin/src/suuid";
 
 use suuid;
@@ -102,6 +103,11 @@ my $Logfile = "$Opt{'logdir'}/$Host.xml";
 my $Comment = length($Opt{'comment'}) ? $Opt{'comment'} : "";
 my $cmd_editor = $ENV{'SUUID_EDITOR'} || $ENV{'EDITOR'} || $Std{'editor'};
 D("cmd_editor = '$cmd_editor'");
+
+my $test = gettimeofday();
+print("test = '$test'\n");
+printf("time2hex = '%s'\n", time2hex($test));
+exit;
 
 if ($Comment eq "-") {
     $Opt{'quiet'} || print(STDERR "$progname: Enter uuid comment: ");

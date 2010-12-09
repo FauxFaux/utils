@@ -24,6 +24,7 @@ our %Opt = (
     'comment' => "",
     'debug' => 0,
     'help' => 0,
+    'one' => 0,
     'quiet' => 0,
     'tag' => "",
     'verbose' => 0,
@@ -41,6 +42,7 @@ GetOptions(
     "comment|c=s" => \$Opt{'comment'},
     "debug" => \$Opt{'debug'},
     "help|h" => \$Opt{'help'},
+    "one|1" => \$Opt{'one'},
     "quiet|q+" => \$Opt{'quiet'},
     "tag|t=s" => \$Opt{'tag'},
     "verbose|v+" => \$Opt{'verbose'},
@@ -77,7 +79,7 @@ chomp(my $uuid = `$begin_cmd`);
 if (!defined($uuid) || $uuid !~ /^$v1_templ$/) {
     die("$progname: Error generating UUID, session not started\n");
 }
-$Opt{'quiet'} < 2 && print(STDERR "sess.begin:$uuid\n");
+$Opt{'quiet'} < 2 && printf(STDERR "sess%s:%s\n", $Opt{'one'} ? "" : ".begin", $uuid);
 defined($ENV{'SESS_UUID'}) || ($ENV{'SESS_UUID'} = "");
 
 $ENV{'SESS_UUID'} .= "$uuid,";
@@ -101,11 +103,13 @@ my $end_cmd = sprintf(
     xml_time_period($end_time - $begin_time),
     $retval
 );
-chomp(my $end_uuid = `$end_cmd`);
-$Opt{'quiet'} < 2 && print(STDERR "sess.end:$end_uuid");
-$Opt{'quiet'} < 1 && printf(STDERR " -- %s, exit code '%d'.",
-                            time_period($end_time - $begin_time), $retval);
-$Opt{'quiet'} < 2 && print(STDERR "\n");
+if (!$Opt{'one'}) {
+    chomp(my $end_uuid = `$end_cmd`);
+    $Opt{'quiet'} < 2 && print(STDERR "sess.end:$end_uuid");
+    $Opt{'quiet'} < 1 && printf(STDERR " -- %s, exit code '%d'.",
+                                time_period($end_time - $begin_time), $retval);
+    $Opt{'quiet'} < 2 && print(STDERR "\n");
+}
 
 sub suuid_xml {
     # {{{
@@ -149,6 +153,8 @@ SESS_UUID environment variable.
 
 Options:
 
+  -1, --one
+    Create only one suuid entry.
   -c X, --comment X
     Specify X as comment.
   -h, --help

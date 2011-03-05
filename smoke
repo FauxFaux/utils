@@ -1,0 +1,153 @@
+#!/usr/bin/perl
+# GPLv2
+#
+# based on smoke,v 1.2 2003/07/26 06:18:23 nugget Exp
+#
+# Get stats for your smokes here:
+# http://www.ftc.gov/foia/frequentrequests/foia2007-00482.pdf (16MB
+#
+# Fill in crap in Config section below
+#
+
+use warnings;
+use strict;
+use Time::Local;
+
+###### Begin Config
+
+my $quit = timelocal(
+        0,      # sec
+        0,      # min
+        12,     # hr
+        12,     # day
+        0,      # month (0-11)
+        2005    # year
+);
+
+my $perday   = 15;   # number of cigs per day
+my $perpack  = 7.00; # price per pack
+my $tar      = 11;   # mg of tar
+my $nicotine = 0.9;  # mg of nicotine
+my $monoxide = 13;   # mg of carbon monoxide
+###### End Config
+
+my $now = time();
+my $diff = $now - $quit;
+
+my $yys = (365*24*60*60);
+my $mos = (365/12)*(24*60*60);
+my $wks = (7*24*60*60);
+my $dys = (24*60*60);
+my $hrs = (60*60);
+my $mns = (60);
+
+my $persec = $perday / (24*60*60);
+my $cigs = int $diff * $persec;
+
+$tar *= $cigs;
+$nicotine *= $cigs;
+$monoxide *= $cigs;
+
+my $milecig = sprintf "%.2f", ($cigs*3)/(5280*12);
+my $money   = sprintf "%.2f", $perpack*($cigs/20);
+
+my $years  = int $diff / $yys; $diff -= $years  * $yys;
+my $months = int $diff / $mos; $diff -= $months * $mos;
+my $weeks  = int $diff / $wks; $diff -= $weeks  * $wks;
+my $days   = int $diff / $dys; $diff -= $days   * $dys;
+my $hours  = int $diff / $hrs; $diff -= $hours  * $hrs;
+my $mins   = int $diff / $mns; $diff -= $mins   * $mns;
+my $secs   = int $diff;
+
+print "I quit smoking ";
+pstr($years,"year");
+pstr($months,"month");
+pstr($weeks,"week");
+pstr($days,"day");
+pstr($hours,"hour");
+pstr($mins,"minute");
+pstr($secs,"second",".");
+print "ago.";
+
+$cigs = num_format($cigs);
+$milecig = num_format($milecig);
+$money = num_format($money);
+$tar = mg_format($tar);
+$nicotine = mg_format($nicotine);
+$monoxide = mg_format($monoxide);
+
+print " I would have smoked $cigs cigarettes.";
+print " (That's like smoking a $milecig mile-long cigarette)";
+print " I've saved \$$money!  I've avoided";
+print " $tar of tar, $nicotine of nicotine, and $monoxide of carbon monoxide.";
+print "\n";
+
+sub pstr {
+        my ($val,$tag,$extra) = @_;
+        if ($val>0) {
+                if($extra) {
+                        print "and ";
+                }
+                print "$val $tag";
+                if ($val>1) {
+                         print "s";
+                }
+                if(!$extra) {
+                        print ", ";
+                } else {
+                        print " ";
+                }
+        }
+}
+
+sub num_format {
+  my ($f_num) = @_;
+  my $f_outstr = "";
+  my $f_counter = 0;
+  my $f_dotspot = 0;
+  if($f_num =~ m/\./g) {
+    $f_dotspot = (pos $f_num)-1;
+  } else {
+    $f_dotspot = 999;
+  }
+  for(my $i=length($f_num)-1; $i>=0; $i--) {
+     my $f_char = substr($f_num,$i,1);
+     if( $f_counter == 3 ) {
+       $f_outstr = "$f_char,$f_outstr";
+       $f_counter = 0;
+     } else {
+       $f_outstr = "$f_char$f_outstr";
+     }
+     if($i < $f_dotspot) {
+       $f_counter++;
+     }
+  }
+  return $f_outstr;
+}
+
+sub mg_format {
+  my ($f_mg) = @_;
+  my @units = ('mg','grams','kg');
+  my $work = $f_mg;
+
+  my $i = 0;
+  my $unit = $units[0];
+  while($work>1000) {
+    $work = $work/1000;
+    $i++;
+    $unit = $units[$i];
+  }
+
+  if($i > 1) {
+    $work = sprintf "%.2f", $work;
+  } else {
+    $work = int $work;
+  }
+
+  my $f_num = num_format($work);
+  my $f_outstr = "$f_num $unit";
+
+  return $f_outstr;
+}
+
+

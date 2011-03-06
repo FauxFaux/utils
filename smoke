@@ -17,18 +17,18 @@ use Time::Local;
 
 my $quit = timelocal(
         0,      # sec
-        0,      # min
-        12,     # hr
-        12,     # day
-        0,      # month (0-11)
-        2005    # year
+        43,     # min
+        16,     # hr
+        22,     # day
+        9,      # month (0-11)
+        2010    # year
 );
 
-my $perday   = 15;   # number of cigs per day
-my $perpack  = 7.00; # price per pack
-my $tar      = 11;   # mg of tar
-my $nicotine = 0.9;  # mg of nicotine
-my $monoxide = 13;   # mg of carbon monoxide
+my $perday   = 20;    # number of cigs per day
+my $perpack  = 85.00; # price per pack
+my $tar      = 10;    # mg of tar
+my $nicotine = 0.8;   # mg of nicotine
+my $monoxide = 10;    # mg of carbon monoxide
 ###### End Config
 
 my $now = time();
@@ -48,7 +48,7 @@ $tar *= $cigs;
 $nicotine *= $cigs;
 $monoxide *= $cigs;
 
-my $milecig = sprintf "%.2f", ($cigs*3)/(5280*12);
+my $milecig = sprintf "%.2f", ($cigs*3)/(5280*12)*0.6213712;
 my $money   = sprintf "%.2f", $perpack*($cigs/20);
 
 my $years  = int $diff / $yys; $diff -= $years  * $yys;
@@ -67,7 +67,7 @@ pstr($days,"day");
 pstr($hours,"hour");
 pstr($mins,"minute");
 pstr($secs,"second",".");
-print "ago.";
+print "ago.\n";
 
 $cigs = num_format($cigs);
 $milecig = num_format($milecig);
@@ -76,9 +76,9 @@ $tar = mg_format($tar);
 $nicotine = mg_format($nicotine);
 $monoxide = mg_format($monoxide);
 
-print " I would have smoked $cigs cigarettes.";
-print " (That's like smoking a $milecig mile-long cigarette)";
-print " I've saved \$$money!  I've avoided";
+print "I would have smoked $cigs cigarettes.";
+print " (That's like smoking a $milecig km cigarette)\n";
+print "I've saved $money NOK!  I've avoided";
 print " $tar of tar, $nicotine of nicotine, and $monoxide of carbon monoxide.";
 print "\n";
 

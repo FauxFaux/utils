@@ -4,11 +4,7 @@
 # File ID: 4906ed12-fb76-11dd-b5ce-000475e441b9
 
 all:
-	mkdir -p log
-	./suuid.t 2>&1 | remove_perltestnumbers >log/suuid.log
-	./suuid.t --todo 2>&1 | remove_perltestnumbers >log/suuid.todo.log
-	./sess.t 2>&1 | remove_perltestnumbers >log/sess.log
-	./sess.t --todo 2>&1 | remove_perltestnumbers >log/sess.todo.log
+	run_perl_tests sess.t suuid.t
 
 clean:
 	rm -rf log

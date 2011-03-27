@@ -71,13 +71,9 @@ if ($Opt{'todo'} && !$Opt{'all'}) {
 
 =pod
 
-testcmd("$CMD command", # {{{
-    <<'END',
-[expected stdin]
-END
-    "",
-    0,
-    "description",
+installed('prog --version', # {{{
+    '//',
+    'description',
 );
 
 # }}}
@@ -109,35 +105,352 @@ local $TODO = '';
     # TODO tests }}}
 }
 
+installed('vim --version', '/VIM - Vi IMproved 7\../', 'vim', 'Check for the best editor ever');
+installed('git --version', '/git version/', 'git-core');
+installed('uuid -d ac89d100-5809-11e0-b3ff-00023faf1383', '/2011-03-27 00:32:19\.377792\.0 UTC/', 'uuid');
+installed('perl --version', '/This is perl, v5/', 'perl');
+installed('pv --version', '/Andrew Wood/', 'pv');
+installed('mc --version', '/GNU Midnight Commander/');
+installed('svn --version', '/svn, version /');
+installed('psql --version', '/psql \(PostgreSQL\)/', 'postgresql');
+installed('gnuplot --version', '/gnuplot \d+\.\d+ patchlevel/');
+# installed('gitk --version', '//');
+installed('gpsbabel --version', '/GPSBabel Version \d/');
+installed('inkscape --version', '/Inkscape \d+\.\d/');
+installed('gdb --version', '/Free Software Foundation, Inc\./');
+installed('ddd --version', '/GNU DDD \d/', 'ddd');
+# installed('dpkg -l', '/(libcurl4-openssl-dev/');
+# installed('', '//');
+
+=pod
+
+my @packages = (
+
+    'libcurl4-openssl-dev',
+
+# Packages {{{
+git-core
+mc vim subversion
+mc vim subversion ctags subversion-tools arj gv vim-doc vim-scripts
+uuid
+flashplugin-nonfree
+flashplugin-nonfree
+vim
+vim-gnome
+gitk
+libexpat1
+gpsbabel
+asciidoc make gcc gettext docbook2x libssl-dev tk
+postgresql
+postgresql-8.4-postgis
+gnuplot inkscape gimp gebabbel
+libcurl4-openssl-dev
+libexpat1-dev
+libdvdread4
+libdvdread4 libdvdcss2
+mplayer
+vorbis-tools
+ddd
+ddd gdb
+perl-doc
+openssh-server
+htop
+apache2
+apache2-doc
+uptimed
+libossp-uuid-perl
+gimp inkscape
+lame
+xz
+xz-utils
+arj
+x264
+vlc
+gnumeric gnucash
+gqview
+libjpeg-progs
+mercurial mercurial-git bzr
+mercurial mercurial-git bzr bzr-doc mercuriaL-DOC
+mercurial mercurial-git bzr bzr-doc mercuriaL-doc
+mercurial mercurial-git bzr bzr-doc mercurial-doc
+mercurial mercurial-git bzr bzr-doc
+graphwiz ddd tree
+graphviz ddd tree
+graphviz-doc ddd tree
+pandoc
+lame
+audacity
+ktorrent
+ffmpeg
+pandoc
+lame
+audacity
+ktorrent
+ktorrent
+ffmpeg
+lynx-cur
+faac
+ffmpeg
+ardour
+frozenbubble
+frozen-bubble
+dict
+apcalc
+wipe
+nmap
+sqlite3 sqlite3-doc
+qemu
+homebank
+grisbi
+rand
+rand
+cpipe pv
+dialog
+dosbox
+elinks
+curl
+stgit
+python2.6-dev python-fuse
+geneweb
+geneweb gwsetup gwtp menu
+gramps
+sshfs
+autoconf automake intltool
+autoconf automake intltool
+audacity
+ktorrent
+ardour
+autoconf automake glib-gettext intltool
+autoconf automake intltool
+cpipe pv
+curl
+dialog
+dict
+elinks
+fdupes
+ffmpeg
+frozen-bubble
+frozenbubble
+g++
+geneweb
+gramps
+grisbi
+homebank
+libbz2-dev
+libdbd-sqlite3-perl
+liblzo2-dev
+libtest-perl-critic-perl
+libtool
+python2.6-dev python-fuse
+qemu
+rand
+sqlite3 sqlite3-doc
+stopwatch
+tidy
+ledger
+stgit
+dosbox
+faac
+geneweb gwsetup gwtp menu
+ktorrent
+lynx-cur
+sshfs
+cpipe pv
+
+# }}}
+
+);
+
+# Output from surkle:~/.bash_history {{{
+$ git lp --reverse .bash_history | grep 'apt-get.*install' | grep '^+'
++apt-get install git-core
++apt-get install mc vim subversion
++apt-get install mc vim subversion ctags subversion-tools arj gv vim-doc vim-scripts
++apt-get install uuid
++apt-get install flashplugin-nonfree
++apt-get install flashplugin-nonfree
++apt-get install vim
++apt-get install vim-gnome
++apt-get install gitk
++apt-get install libexpat1
++apt-get install gpsbabel
++apt-get install asciidoc make gcc gettext docbook2x libssl-dev tk
++apt-get install postgresql
++apt-get install postgresql-8.4-postgis
++apt-get install gnuplot inkscape gimp gebabbel
++apt-get install libcurl4-openssl-dev
++apt-get install libexpat1-dev
++apt-get install libdvdread4
++apt-get install libdvdread4 libdvdcss2
++apt-get install libdvdread4'
++apt-get install mplayer
++apt-get install vorbis-tools
++apt-get install ddd
++apt-get install ddd gdb
++apt-get install perl-doc
++sudo apt-get install openssh-server
++apt-get install htop
++sess apt-get install apache
++sess apt-get install apache2
++sess apt-get install apache2 apache2-doc
++apt-get install uprecords
++apt-get install uptimed
++apt-get install libossp-uuid-perl
++apt-get install gimp inkscape
++apt-get install lame
++apt-get install xz
++apt-get install xz-utils
++apt-get install arj
++apt-get install x264
++apt-get install vlc
++apt-get install gnumeric gnucash
++apt-get install gqview
++apt-get install libjpeg-progs
++apt-get install mercurial mercurial-git bzr
++apt-get install mercurial mercurial-git bzr bzr-doc mercuriaL-DOC
++apt-get install mercurial mercurial-git bzr bzr-doc mercuriaL-doc
++apt-get install mercurial mercurial-git bzr bzr-doc mercurial-doc
++apt-get install mercurial mercurial-git bzr bzr-doc
++apt-get install graphwiz ddd tree
++apt-get install graphviz ddd tree
++apt-get install graphviz-doc ddd tree
++apt-get install pandoc
++apt-get install lame
++apt-get install audacity
++sess apt-get install ktorrent
++sess apt-get install ktorrent
++apt-get install ffmpeg
++apt-get install pandoc
++apt-get install lame
++apt-get install audacity
++sess apt-get install ktorrent
++sess apt-get install ktorrent
++apt-get install ffmpeg
++sess apt-get install lynx-cur
++sess apt-get install faac
++apt-get install ffmpeg
++apt-get install ardour
++apt-get install frozenbubble
++apt-get install frozen-bubble
++apt-get install dict
++apt-get install apcalc
++apt-get install wipe
++apt-get install nmap
++apt-get install sqlite3 sqlite3-doc
++apt-get install qemu
++apt-get install homebank
++apt-get install grisbi
++apt-get install rand
++apt-get install rand
++apt-get install cpipe pv
++sudo apt-get install cpipe pv
++apt-get install dialog
++apt-get install dialog
++sess apt-get install dosbox
++apt-get install elinks
++apt-get install curl
++sess -c "Det er like greit å installere den fra apt-get, siste versjon er 0.15 i begge tilfeller." apt-get install stgit
++apt-get install python2.6-dev python-fuse
++apt-get install geneweb
++sess apt-get install geneweb gwsetup gwtp menu
++apt-get install gramps
++sess apt-get install sshfs
++sess -c "Utrolig hva man roter med." apt-get install xkermit
++sess -c "Utrolig hva man roter med." apt-get install ckermit
++apt-get install stopwatch
++apt-get install autoconf automake glib-gettext intltool
++apt-get install autoconf automake intltool
++sess apt-get install autoconf automake intltool
++apt-get install audacity
++sess apt-get install ktorrent
++sess apt-get install ktorrent
++apt-get install ffmpeg
++sess apt-get install lynx-cur
++sess apt-get install faac
++apt-get install ffmpeg
++apt-get install ardour
++apt-get install elinks
++apt-get install curl
++sess -c "Det er like greit å installere den fra apt-get, siste versjon er 0.15 i begge tilfeller." apt-get install stgit
++apt-get install python2.6-dev python-fuse
++apt-get install geneweb
++sess apt-get install geneweb gwsetup gwtp menu
++apt-get install gramps
++sess apt-get install sshfs
++sess -c "Utrolig hva man roter med." apt-get install xkermit
++sess -c "Utrolig hva man roter med." apt-get install ckermit
++apt-get install stopwatch
++apt-get install autoconf automake glib-gettext intltool
++apt-get install autoconf automake intltool
++sess apt-get install autoconf automake intltool
++apt-get update; sess -c "Det var jo ikke på linode jeg skulle installere den. Jaja." apt-get install ledger
++apt-get update; sess -c "Det var jo ikke på linode jeg skulle installere den. Jaja." apt-get install ledger
++sess apt-get install lynx-cur
++sess apt-get install faac
++apt-get install ffmpeg
++apt-get install ardour
++apt-get install frozenbubble
++apt-get install frozen-bubble
++apt-get install dict
++apt-get update; sess -c "Det var jo ikke på linode jeg skulle installere den. Jaja." apt-get install ledger
++apt-get install libbz2-dev
++apt-get install liblzo2-dev
++apt-get install g++
++apt-get install libtool
++apt-get install g++
++apt-get install ffmpeg
++apt-get install ardour
++apt-get install frozenbubble
++apt-get install frozen-bubble
++apt-get install dict
++apt-get update; sess -c "Det var jo ikke på linode jeg skulle installere den. Jaja." apt-get install ledger
++apt-get install libbz2-dev
++apt-get install liblzo2-dev
++apt-get install g++
++apt-get install libtool
++apt-get install g++
++apt-get install fdupes
++apt-get install sqlite3 sqlite3-doc
++apt-get install qemu
++apt-get install homebank
++apt-get install grisbi
++apt-get install rand
++apt-get install rand
++apt-get install cpipe pv
++sudo apt-get install cpipe pv
++apt-get install dialog
++apt-get install dialog
++sess apt-get install dosbox
++apt-get install elinks
++apt-get install curl
++apt-get install libbz2-dev
++apt-get install liblzo2-dev
++apt-get install g++
++apt-get install libtool
++apt-get install g++
++apt-get install fdupes
++apt-get install tidy
++apt-get install libdbd-sqlite3-perl
++apt-get install libtest-perl-critic-perl
++grep "apt-get install" .bash_history
+# }}}
+
+=cut
+
 diag('Testing finished.');
 
 sub installed {
     # {{{
-    my ($Cmd, $Exp_stdout, $Exp_stderr, $Exp_retval, $Desc) = @_;
+    my ($Cmd, $Exp, $Desc) = @_;
     my $stderr_cmd = '';
-    my $deb_str = $Opt{'debug'} ? ' --debug' : '';
     my $Txt = join('',
         "\"$Cmd\"",
         defined($Desc)
             ? " - $Desc"
             : ''
     );
-    my $TMP_STDERR = 'installed_progs-stderr.tmp';
 
-    if (defined($Exp_stderr) && !length($deb_str)) {
-        $stderr_cmd = " 2>$TMP_STDERR";
-    }
-    like(`$Cmd$deb_str$stderr_cmd`, "$Exp_stdout", $Txt);
-    my $ret_val = $?;
-    if (defined($Exp_stderr)) {
-        if (!length($deb_str)) {
-            like(file_data($TMP_STDERR), "$Exp_stderr", "$Txt (stderr)");
-            unlink($TMP_STDERR);
-        }
-    } else {
-        diag("Warning: stderr not defined for '$Txt'");
-    }
-    is($ret_val >> 8, $Exp_retval, "$Txt (retval)");
+    like(`$Cmd 2>&1`, $Exp, $Txt);
     return;
     # }}}
 } # installed()

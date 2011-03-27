@@ -111,6 +111,37 @@ local $TODO = '';
 
 diag('Testing finished.');
 
+sub installed {
+    # {{{
+    my ($Cmd, $Exp_stdout, $Exp_stderr, $Exp_retval, $Desc) = @_;
+    my $stderr_cmd = '';
+    my $deb_str = $Opt{'debug'} ? ' --debug' : '';
+    my $Txt = join('',
+        "\"$Cmd\"",
+        defined($Desc)
+            ? " - $Desc"
+            : ''
+    );
+    my $TMP_STDERR = 'installed_progs-stderr.tmp';
+
+    if (defined($Exp_stderr) && !length($deb_str)) {
+        $stderr_cmd = " 2>$TMP_STDERR";
+    }
+    like(`$Cmd$deb_str$stderr_cmd`, "$Exp_stdout", $Txt);
+    my $ret_val = $?;
+    if (defined($Exp_stderr)) {
+        if (!length($deb_str)) {
+            like(file_data($TMP_STDERR), "$Exp_stderr", "$Txt (stderr)");
+            unlink($TMP_STDERR);
+        }
+    } else {
+        diag("Warning: stderr not defined for '$Txt'");
+    }
+    is($ret_val >> 8, $Exp_retval, "$Txt (retval)");
+    return;
+    # }}}
+} # installed()
+
 sub testcmd {
     # {{{
     my ($Cmd, $Exp_stdout, $Exp_stderr, $Exp_retval, $Desc) = @_;

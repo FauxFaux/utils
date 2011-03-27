@@ -3,7 +3,7 @@
 #=======================================================================
 # installed_progs.t
 # File ID: a5a038ee-5803-11e0-aa2f-00023faf1383
-# Test suite for installed_progs(1).
+# Check for missing programs
 #
 # Character set: UTF-8
 # ©opyleft 2011– Øyvind A. Holm <sunny@sunbase.org>
@@ -25,7 +25,7 @@ use Getopt::Long;
 local $| = 1;
 
 our $Debug = 0;
-our $CMD = '../installed_progs';
+our $CMD = 'STDexecDTS';
 
 our %Opt = (
 
@@ -83,32 +83,6 @@ END
 # }}}
 
 =cut
-
-diag('Testing -h (--help) option...');
-likecmd("$CMD -h", # {{{
-    '/  Show this help\./',
-    '/^$/',
-    0,
-    'Option -h prints help screen',
-);
-
-# }}}
-diag('Testing -v (--verbose) option...');
-likecmd("$CMD -hv", # {{{
-    '/^\n\S+ v\d\.\d\d\n/s',
-    '/^$/',
-    0,
-    'Option --version with -h returns version number and help screen',
-);
-
-# }}}
-diag('Testing --version option...');
-likecmd("$CMD --version", # {{{
-    '/^\S+ v\d\.\d\d\n/',
-    '/^$/',
-    0,
-    'Option --version returns version number',
-);
 
 diag("Testing return values...");
 likecmd("perl -e 'exit(0)'", '/^$/', '/^$/', 0, "likecmd(): return 0");
@@ -233,7 +207,8 @@ sub usage {
 
 Usage: $progname [options] [file [files [...]]]
 
-Contains tests for the installed_progs(1) program.
+Check for missing programs every self-respecting *NIX system should 
+have.
 
 Options:
 
@@ -282,7 +257,8 @@ installed_progs.t [options] [file [files [...]]]
 
 =head1 DESCRIPTION
 
-Contains tests for the installed_progs(1) program.
+Check for missing programs every self-respecting *NIX system should 
+have.
 
 =head1 OPTIONS
 

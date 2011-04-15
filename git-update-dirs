@@ -21,6 +21,7 @@ our $Debug = 0;
 
 our %Opt = (
 
+    'bare' => 0,
     'compress' => 0,
     'debug' => 0,
     'fetch' => 0,
@@ -28,6 +29,7 @@ our %Opt = (
     'pull' => 0,
     'push' => 0,
     'recursive' => 0,
+    'stdin' => 0,
     'submodule' => 0,
     'test' => 0,
     'verbose' => 0,
@@ -42,6 +44,7 @@ our $VERSION = "0.00";
 Getopt::Long::Configure("bundling");
 GetOptions(
 
+    "bare|b" => \$Opt{'bare'},
     "compress|c" => \$Opt{'compress'},
     "debug" => \$Opt{'debug'},
     "fetch|f" => \$Opt{'fetch'},
@@ -49,6 +52,7 @@ GetOptions(
     "pull|p" => \$Opt{'pull'},
     "push|P" => \$Opt{'push'},
     "recursive|r" => \$Opt{'recursive'},
+    "stdin" => \$Opt{'stdin'},
     "submodule|s" => \$Opt{'submodule'},
     "test|t" => \$Opt{'test'},
     "verbose|v+" => \$Opt{'verbose'},
@@ -63,7 +67,7 @@ if ($Opt{'version'}) {
     exit(0);
 }
 
-my @Dirs = $Opt{'recursive'} ? glob("*") : ();
+my @Dirs = ();
 my @err_compress = ();
 my @err_fetch = ();
 my @err_pull = ();
@@ -71,11 +75,16 @@ my @err_push = ();
 my @err_test = ();
 my @err_updsub = ();
 
-if ($Opt{'recursive'}) {
-    my $repos = `find -type d -name .git`;
-    $repos =~ s/\/\.git\n/\n/g;
-    @Dirs = sort split("\n", $repos);
+if ($Opt{'stdin'}) {
+    local $/ = undef;
+    @Dirs = sort split("\n", <STDIN>);
 }
+if ($Opt{'recursive'}) {
+    my $repos = `find -type d`;
+    @Dirs = split("\n", $repos);
+}
+
+@Dirs = find_paths(@Dirs);
 
 my $orig_dir = getcwd();
 LOOP: for my $f (@Dirs) {
@@ -130,10 +139,40 @@ scalar(@err_compress) && print("$progname: Unable to compress: " . join(" ", @er
 scalar(@err_test) && print("$progname: Error in git fsck: " . join(" ", @err_test) . "\n");
 
 sub check_sig {
+    # {{{
     my $retval = shift;
     ($retval & 127) && die("\n$progname: Child process interrupted, aborting.\n");
     return(0);
+    # }}}
 } # check_sig()
+
+sub find_paths {
+    # {{{
+    my @dirs = @_;
+    my %unique = ();
+    my @retval = ();
+    for my $curr (@dirs) {
+        should_use($curr) && ($unique{$curr} = 1, print("using '$curr'\n"));
+    }
+    for my $t (keys %unique) {
+        print("push $t\n");
+        push(@retval, $t);
+    }
+    return(sort @retval);
+    # }}}
+} # find_paths()
+
+sub should_use {
+    # {{{
+    my $dir = shift;
+    # print("should_use('$dir')\n");
+    my $use_it = 0;
+    if ($dir =~ /.*\/\.git$/) {
+        $use_it = 1;
+    }
+    return($use_it);
+    # }}}
+} # should_use()
 
 sub print_version {
     # Print program version {{{
@@ -155,6 +194,9 @@ Usage: $progname [options] [file [files [...]]]
 
 Options:
 
+  -b, --bare
+    Also work on bare repositories. Incompatible with the --fetch, 
+    --pull and --submodule options.
   -c, --compress
     Compress local repositories to save space
   -h, --help
@@ -167,6 +209,11 @@ Options:
     Also execute "git pa"
   -r, --recursive
     Update all repositories recursively under the current directory
+  --stdin
+    Read repository names from stdin. Example:
+      find -regex '.*[^/]+\\.git\$' -type d | git update-dir --stdin -t
+        Test the integrity of all repositories ending in ".git", a 
+        common naming scheme of bare repositories.
   -s, --submodule
     Update submodules if .gitmodules is found.
   -t, --test

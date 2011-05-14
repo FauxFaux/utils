@@ -335,7 +335,7 @@ sub top_of_kernel_tree {
 
 	foreach my $check (@tree_check) {
 		if (! -e $root . '/' . $check) {
-			return 0;
+			return 1; # Disabled
 		}
 	}
 	return 1;

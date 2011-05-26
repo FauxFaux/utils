@@ -57,9 +57,11 @@ my @shas = scalar(@ARGV) ? @ARGV : ();
 if (scalar(@shas)) {
     for my $curr (@shas) {
         system("git lpar `git branch -a --contains=\"$curr\" | cut -c3- | grep -v -- '->'` >>~/src/git/lpar/$repo.lpar");
+        system("git lr `git branch -a --contains=\"$curr\" | cut -c3- | grep -v -- '->'` | grep ^: >>~/src/git/lpar/$repo.lpar");
     }
 } else {
     system("git lpar --all >>~/src/git/lpar/$repo.lpar");
+    system("git lr --all | grep ^: >>~/src/git/lpar/$repo.lpar");
 }
 
 sub print_version {
